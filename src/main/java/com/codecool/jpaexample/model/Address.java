@@ -2,19 +2,24 @@ package com.codecool.jpaexample.model;
 
 import javax.persistence.*;
 
-
 @Entity
+@Table(name = "addresses")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String country;
+
+    @Column(name = "Zip", length = 4)
     private String zipcode;
+
+    @OneToOne(mappedBy = "address")
+    private Student student;
+
+    private String country;
     private String city;
     private String addr;
 
-    public Address() {
-    }
+    public Address() {}
 
     public Address(String country, String zipcode, String city, String addr) {
         this.country = country;
@@ -73,5 +78,4 @@ public class Address {
                 ", addr='" + addr + '\'' +
                 '}';
     }
-
 }

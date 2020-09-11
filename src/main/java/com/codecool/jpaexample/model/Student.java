@@ -7,26 +7,32 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "students")
 public class Student {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String name;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
+    @Transient
     private long age;
 
     @OneToOne
     private Address address;
 
-    public Student() {
-    }
+    @ElementCollection
+    private List<String> phoneNumbers = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Klass klass;
+
+    public Student() {}
 
     public Student(String name, String email, Date dateOfBirth) {
         this.name = name;
@@ -36,9 +42,19 @@ public class Student {
                 / (60L * 60L * 1000L * 24L * 365L);
     }
 
-    public Student(String name, String email, Date dateOfBirth, Address address) {
+    public Student(String name, String email, Date dateOfBirth, Address address, Klass klass, List<String> phoneNumbers) {
         this(name, email, dateOfBirth);
         this.address = address;
+        this.klass = klass;
+        this.phoneNumbers = phoneNumbers;
+    }
+
+    Klass getKlass() {
+        return klass;
+    }
+
+    void setKlass(Klass klass) {
+        this.klass = klass;
     }
 
     public long getId() {
@@ -94,5 +110,4 @@ public class Student {
                 ", address id=" + address.getId() +
                 '}';
     }
-
 }
